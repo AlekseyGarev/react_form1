@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 function App() {
@@ -7,18 +7,13 @@ function App() {
   const [rgbResult, setRgbResult] = useState('rgb(153, 33, 255)')
 
   const hexToRgb = (hex) => {
-    let cleanHex = hex.replace('#', '')
-    let bigint = parseInt(cleanHex, 16)
-    let r = (bigint >> 16) & 255
-    let g = (bigint >> 8) & 255
-    let b = bigint & 255
+    const cleanHex = hex.replace('#', '')
+    const bigint = parseInt(cleanHex, 16)
+    const r = (bigint >> 16) & 255
+    const g = (bigint >> 8) & 255
+    const b = bigint & 255
     return `rgb(${r}, ${g}, ${b})`
   }
-
-  useEffect(() => {
-    const validColor = (color.length === 7 && !error) ? color : '#9921ff'
-    document.body.style.backgroundColor = validColor
-  }, [color, error])
 
   const handleInputChange = (e) => {
     const value = e.target.value
@@ -38,28 +33,28 @@ function App() {
     }
   }
 
-  return (
-    <label className="container">
-      <input 
-        type="text" 
-        className="input-field" 
-        id="colorInput" 
-        placeholder="Введите код цвета..." 
-        value={color}
-        onChange={handleInputChange}
-        maxLength={7}
-      />
+  const backgroundColor = error 
+    ? '#e94b35' 
+    : (color.length === 7 ? color : '#9921ff')
 
-      {error ? (
-        <span className="result error" id="result">
-          Ошибка: неверный формат HEX
+  return (
+    <div className="app-background" style={{ backgroundColor }}>
+      <label className="container">
+        <input 
+          type="text" 
+          className="input-field" 
+          id="colorInput" 
+          placeholder="Введите код цвета..." 
+          value={color}
+          onChange={handleInputChange}
+          maxLength={7}
+        />
+
+        <span className={`result ${error ? 'error' : ''}`} id="result">
+          {error ? 'Ошибка!' : rgbResult}
         </span>
-      ) : (
-        <span className="result" id="result">
-          {rgbResult}
-        </span>
-      )}
-    </label>
+      </label>
+    </div>
   )
 }
 
